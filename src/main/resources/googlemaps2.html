@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Displaying Text Directions With setPanel()</title>
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      #floating-panel {
+        position: absolute;
+        top: 10px;
+        left: 25%;
+        z-index: 5;
+        background-color: #fff;
+        padding: 5px;
+        border: 1px solid #999;
+        text-align: center;
+        font-family: 'Roboto','sans-serif';
+        line-height: 30px;
+        padding-left: 10px;
+      }
+      #right-panel {
+        font-family: 'Roboto','sans-serif';
+        line-height: 30px;
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+
+      #right-panel select, #right-panel input {
+        font-size: 10px;
+      }
+
+      #right-panel select {
+        width: 100%;
+      }
+
+      #right-panel i {
+        font-size: 10px;
+      }
+      #right-panel {
+        height: 100%;
+        float: right;
+        width: 250px;
+        overflow: auto;
+      }
+      #map {
+        margin-right: 250px;
+      }
+      #floating-panel {
+        background: #fff;
+        padding: 5px;
+        font-size: 14px;
+        font-family: Arial;
+        border: 1px solid #ccc;
+        box-shadow: 0 2px 2px rgba(33, 33, 33, 0.4);
+        display: none;
+      }
+      @media print {
+        #map {
+          height: 500px;
+          margin: 0;
+        }
+        #right-panel {
+          float: none;
+          width: auto;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="floating-panel">
+      <strong>Start:</strong>
+    <input type="text" id="starttext" value="Start Address" readonly>
+  <br>
+  <strong>End:</strong>
+    <input type="text" id="endtext" value="End Address" readonly>
+    </div>
+    <div id="right-panel"></div>
+    <div id="map"></div>
+    <script>
+      function initMap() {
+        var directionsRenderer = new google.maps.DirectionsRenderer;
+        var directionsService = new google.maps.DirectionsService;
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 12,
+          center: {lat: 1.3521, lng: 103.8198}
+        });
+        directionsRenderer.setMap(map);
+        directionsRenderer.setPanel(document.getElementById('right-panel'));
+
+        var control = document.getElementById('floating-panel');
+        control.style.display = 'block';
+        map.controls[google.maps.ControlPosition.TOP_LEFT].push(control);
+
+        var onChangeHandler = function() {
+          calculateAndDisplayRoute(directionsService, directionsRenderer);
+        };
+        document.getElementById('starttext').addEventListener('change', onChangeHandler);
+        document.getElementById('endtext').addEventListener('change', onChangeHandler);
+      }
+	  
+	  function addressInput(startpoint, endpoint) {
+		document.getElementById('starttext').value = startpoint;
+		document.getElementById('endtext').value = endpoint;
+		document.getElementById('endtext').dispatchEvent(new Event('change'));
+		}
+		
+
+      function calculateAndDisplayRoute(directionsService, directionsRenderer) {
+        var start = document.getElementById('starttext').value;
+        var end = document.getElementById('endtext').value;
+        directionsService.route({
+          origin: start,
+          destination: end,
+          travelMode: 'TRANSIT'
+        }, function(response, status) {
+          if (status == 'OK') {
+            directionsRenderer.setDirections(response);
+          } else {
+            window.alert('Directions request failed due to ' + status);
+          }
+        });
+      }
+
+      function getPos(start,end){
+        var startLat = google.map
+      }
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBy2F1F8P_tQ5_vjDVYh6OpDaze7jMqM2U&callback=initMap">
+    </script>
+  </body>
+</html>
